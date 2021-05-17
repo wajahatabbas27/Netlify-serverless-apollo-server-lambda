@@ -1,19 +1,17 @@
-import React from 'react'
-import gql from 'graphql-tag';
+import React from "react"
 import { useQuery } from '@apollo/client';
+import gql from 'graphql-tag';
 
-const ApolloQuery = gql`
+
+// This query is executed at run time by Apollo.
+const APOLLO_QUERY = gql`
 {
   message
-  user{
-    name
-    age
-  }
 }
 `;
 
-const Index = () => {
-  const { loading, error, data } = useQuery(ApolloQuery);
+export default function Home() {
+  const { loading, error, data } = useQuery(APOLLO_QUERY);
 
   return (
     <div>
@@ -23,14 +21,7 @@ const Index = () => {
       {data && data.message && (
         <div>{data.message}</div>
       )}
-      {data && data.user && (
-        <div>
-          <div>{data.user.name}</div>
-          <div>{data.user.age}</div>
-        </div>
-      )}
     </div>
-  )
-}
+  );
 
-export default Index
+}

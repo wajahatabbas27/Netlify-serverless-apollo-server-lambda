@@ -1,38 +1,38 @@
-const { ApolloServer, gql } = require('apollo-server-lambda')
+const { ApolloServer, gql } = require("apollo-server-lambda");
+const faunadb = require('faunadb'),
+  q = faunadb.query;
+
 
 const typeDefs = gql`
   type Query {
-    message: String,
-    user: User
-  }
-
-  type User {
-    name: String,
-    age: Int,
+    message: String
   }
 `;
 
+
+
 const resolvers = {
   Query: {
-    message: (parent, args, context) => {
-      return "Hello World ! from AZ and Wajahat Abbas"
-    },
-    user: (parent, args, context) => {
-      return {
-        name: "Wajahat AZ",
-        age: "23"
+    message: async (parent, args, context) => {
+      try {
+        var client = new faunadb.Client({ secret: "fnAEJZod0SACDeltK7yfSbf_ZPg0PdDtzjZQNT4W" });
+        let result = await client.query(
+          q.Get(q.Ref(q.Collection('posts'), '297800628222034445'))
+        );
+
+        return result.data.title;
+      } catch (err) {
+        return err.toString();
       }
     }
-  },
-}
+  }
+};
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   playground: true,
   introspection: true
-})
+});
 
-const handler = server.createHandler()
-
-module.exports = { handler }
+exports.handler = server.createHandler();
