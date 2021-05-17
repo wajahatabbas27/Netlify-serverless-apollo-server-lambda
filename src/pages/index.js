@@ -5,6 +5,10 @@ import { useQuery } from '@apollo/client';
 const ApolloQuery = gql`
 {
   message
+  user{
+    name
+    age
+  }
 }
 `;
 
@@ -18,6 +22,12 @@ const Index = () => {
       {error && <p>Error: ${error.message}</p>}
       {data && data.message && (
         <div>{data.message}</div>
+      )}
+      {data && data.user && (
+        <div>
+          <div>{data.user.name}</div>
+          <div>{data.user.age}</div>
+        </div>
       )}
     </div>
   )
